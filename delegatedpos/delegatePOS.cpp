@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstdlib> 
-#include <ctime> 
+#include <ctime>
+#include <ctime>
+#include <string>
+
 
 using namespace std;
 
@@ -32,13 +35,7 @@ class DPOS{
       }  
      }
 
-   void displayArray(){
-      firstArrayCreation();
-      cout<< "\n Total sum : "<<totalsum<<"\n";
-       // for (int i = 0; i < 100; i++) {
-       //     cout<< N[i]<<"\n";
-       // }
-     }
+   
   
    void clusterCreation(){
       int m = 0;
@@ -54,17 +51,7 @@ class DPOS{
     
      }
     
-   void displayClusters(){
-         clusterCreation();
-         // for (int i = 0; i < 10; i++) {
-         //    cout<<"\n Cluster "<<i<<" :: ";   
-         //    for (int j = 1; j < 2; j=j+2) {
-         //      cout<<clusters[i][j]<<"\t";
-         //       }
-         // }
-      
-     }
-
+  
     int s;
     int v;
     int clusterno;
@@ -95,59 +82,56 @@ class DPOS{
             id++;
        }
      }
-  inline const char * const BoolToString(bool b)
-{
-  return b ? "true" : "false";
-}   
 
-   void displayStakerNodes(){
-          for(int i=0; i<65; i++){
-
-              cout<< "StakerNode "<<i<<" :";
-              cout<< Stakernodes[i].nodeid<<"--";
-              cout<< Stakernodes[i].value<<"--";
-              cout<< Stakernodes[i].clustergrpno<<"--";
-              cout<< Stakernodes[i].clusterprob<<"--";
-              cout<< Stakernodes[i].totalprob<<"-:)";
-              //cout<< BoolToString(Stakernodes[i].staker);
-              
-      }
-   }
-
-   void displayValidatorNodes(){
-    
-      for(int i=0; i<35; i++){
-              cout<< "Validatornode "<<i<<" :";
-              cout<< Validatornodes[i].nodeid<<"--";
-              //cout<< Validatornodes[i].value<<"--";
-              cout<< Validatornodes[i].clustergrpno<<"-:)";
-              //cout<< Validatornodes[i].clusterprob<<"--";
-              //cout<< Validatornodes[i].totalprob<<"-:)";
-              //cout<< BoolToString(Validatornodes[i].staker);
-             
-      }
-   }
 
     void selectNodeFromCluster(){
+        count = 0;
                 int clusterno;
-                cout<<"Select the cluster:"
+                int selectednode;
+                cout<<"Enter the cluster number from 0 to 9: ";
                 cin>>clusterno;
-                
+                Node nodelist[10];
+                for(int i=0;i<65;i++){
+                  if(Stakernodes[i].clustergrpno==clusterno){
+                    nodelist[count] = Stakernodes[i];
+                    count++;
+                  }
+                }
+                   cout<< "\n Staker Nodes present in this cluster are: \n";
+                for(int i=0;i<count;i++){
+                  cout<< "\nStakerNode "<<i<<" :";
+                  cout<< nodelist[i].nodeid<<"--";
+                  cout<< nodelist[i].value<<"--";
+                  cout<< nodelist[i].clustergrpno<<"-:) \n";
+                }
+
+                srand((int)time(0));
+                int randno = rand() % clusters[clusterno][1] +1;
+               cout<<"\n Cluster Total: "<<clusters[clusterno][1]<<"\n";
+              for(int i=0; i<10;i++){
+                    randno -= nodelist[i].value;
+                      if(randno<=0){
+                          selectednode = i;
+                          break;
+                          }
+                      else{
+                          continue;
+                          }
+                }
+
+                cout<<"\n Selected node is as follows: \n"<<"NodeID: "<<nodelist[selectednode].nodeid<<"\nValue: "<<nodelist[selectednode].value;
     }
 };
 
 int main(){
      DPOS dpos;  
    
-    dpos.displayArray();
-    dpos.displayClusters();
+    dpos.firstArrayCreation();
+    dpos.clusterCreation();
      cout<<" \n";
      dpos.nodeCreationAndClassification();
-     dpos.displayValidatorNodes();
-     dpos.displayStakerNodes();
- 
+     dpos.selectNodeFromCluster();
       cout<<"\n";
-   
-   
-
+  
+  
  }
